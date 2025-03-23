@@ -1,16 +1,19 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/web.dart';
 import 'package:smart_home_app/core/helpers/app_regex.dart';
+import 'package:smart_home_app/core/repo/auth_repo.dart';
 import 'package:smart_home_app/core/routing/routes.dart';
 import 'package:smart_home_app/core/theming/colors.dart';
 import 'package:smart_home_app/core/theming/text_style.dart';
 import 'package:smart_home_app/core/widgets/app_text_button.dart';
 import 'package:smart_home_app/core/widgets/app_text_form_field.dart';
+import 'package:smart_home_app/features/login/data/cubit/login_cubit.dart';
 import 'package:smart_home_app/features/login/widget/do_not_have_accont.dart';
 import 'package:smart_home_app/features/login/widget/terms_condition.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -34,7 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: BlocProvider(
+        create: (context) => LoginCubit(AuthRepo()),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
           child: SingleChildScrollView(
@@ -129,73 +133,92 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       Gap(20.h),
-                      AppTextButton(
-                        buttonText: "sign-in".tr(),
-                        textStyle: TextStyles.font16WhiteSemiBold,
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            try {
-                              final credential = await FirebaseAuth.instance
-                                  .signInWithEmailAndPassword(
-                                email: _emailController.text.trim(),
-                                password: _passwordController.text.trim(),
-                              );
-                              await FirebaseAuth.instance.currentUser!.reload();
-
-                              if (credential.user!.emailVerified) {
-                                // await getUserInfo();
-                                setState(() {
-                                  GoRouter.of(context).pushReplacement(
-                                    AppRoutes.homePageScreen,
-                                  );
-                                });
-                              } else {
-                                FirebaseAuth.instance.currentUser!
-                                    .sendEmailVerification();
-                                AwesomeDialog(
-                                  // ignore: use_build_context_synchronously
-                                  context: context,
-                                  dialogType: DialogType.error,
-                                  animType: AnimType.rightSlide,
-                                  title: 'Error',
-                                  desc: 'Please verify your email',
-                                ).show();
-                              }
-                            } on FirebaseAuthException catch (e) {
-                              String errorMessage;
-                              switch (e.code) {
-                                case 'invalid-email':
-                                  errorMessage =
-                                      'The email address is not valid.';
-                                  break;
-                                case 'user-disabled':
-                                  errorMessage =
-                                      'The user account has been disabled.';
-                                  break;
-                                case 'user-not-found':
-                                  errorMessage =
-                                      'No user found with this email.';
-                                  break;
-                                case 'wrong-password':
-                                  errorMessage = 'Incorrect password.';
-                                  break;
-                                default:
-                                  errorMessage = 'An unknown error occurred.';
-                              }
-                              AwesomeDialog(
-                                // ignore: use_build_context_synchronously
-                                context: context,
-                                dialogType: DialogType.error,
-                                animType: AnimType.rightSlide,
-                                title: 'Error',
-                                desc: errorMessage,
-                              ).show();
-                            } catch (e) {
-                              logger.e(e);
-                            }
-                          } else {
-                            logger.e('Form is not valid');
+                      BlocConsumer<LoginCubit, LoginState>(
+                        listener: (context, state) {
+                          if (state is LoginSuccess) {
+                            GoRouter.of(context)
+                                .pushReplacement(AppRoutes.homePageScreen);
+                          } else if (state is LoginFailure) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(state.error)));
                           }
+                        },
+                        builder: (context, state) {
+                          if (state is LoginLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          return AppTextButton(
+                            buttonText: "sign-in".tr(),
+                            textStyle: TextStyles.font16WhiteSemiBold,
+                            onPressed: () async {
+                              if (formKey.currentState!.validate()) {
+                                try {
+                                  final credential = await FirebaseAuth.instance
+                                      .signInWithEmailAndPassword(
+                                    email: _emailController.text.trim(),
+                                    password: _passwordController.text.trim(),
+                                  );
+                                  await FirebaseAuth.instance.currentUser!
+                                      .reload();
+
+                                  if (credential.user!.emailVerified) {
+                                    setState(() {
+                                      GoRouter.of(context).pushReplacement(
+                                        AppRoutes.homePageScreen,
+                                      );
+                                    });
+                                  } else {
+                                    FirebaseAuth.instance.currentUser!
+                                        .sendEmailVerification();
+                                    AwesomeDialog(
+                                      // ignore: use_build_context_synchronously
+                                      context: context,
+                                      dialogType: DialogType.error,
+                                      animType: AnimType.rightSlide,
+                                      title: 'Error',
+                                      desc: 'Please verify your email',
+                                    ).show();
+                                  }
+                                } on FirebaseAuthException catch (e) {
+                                  String errorMessage;
+                                  switch (e.code) {
+                                    case 'invalid-email':
+                                      errorMessage =
+                                          'The email address is not valid.';
+                                      break;
+                                    case 'user-disabled':
+                                      errorMessage =
+                                          'The user account has been disabled.';
+                                      break;
+                                    case 'user-not-found':
+                                      errorMessage =
+                                          'No user found with this email.';
+                                      break;
+                                    case 'wrong-password':
+                                      errorMessage = 'Incorrect password.';
+                                      break;
+                                    default:
+                                      errorMessage =
+                                          'An unknown error occurred.';
+                                  }
+                                  AwesomeDialog(
+                                    // ignore: use_build_context_synchronously
+                                    context: context,
+                                    dialogType: DialogType.error,
+                                    animType: AnimType.rightSlide,
+                                    title: 'Error',
+                                    desc: errorMessage,
+                                  ).show();
+                                } catch (e) {
+                                  logger.e(e);
+                                }
+                              } else {
+                                logger.e('Form is not valid');
+                              }
+                            },
+                          );
                         },
                       ),
                       Gap(16.h),
