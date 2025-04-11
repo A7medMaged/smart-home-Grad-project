@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -16,29 +15,17 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
-  // ignore: unused_element
-  void initState() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        logger.f('User is currently signed out!');
-      } else {
-        logger.f('User is signed in!');
-      }
-    });
-  }
+  FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    if (user == null) {
+      logger.f('User is currently signed out!');
+    } else {
+      logger.f('User is signed in!');
+    }
+  });
 
   runApp(
-    EasyLocalization(
-      supportedLocales: const [Locale('en'), Locale('ar')],
-      path:
-          'assets/translations', // <-- change the path of the translation files
-      fallbackLocale: const Locale('en'),
-      startLocale: const Locale('en'),
-      saveLocale: true,
-      child: SmartHomeApp(
-        appRouter: AppRouter(),
-      ),
+    SmartHomeApp(
+      appRouter: AppRouter(),
     ),
   );
 }

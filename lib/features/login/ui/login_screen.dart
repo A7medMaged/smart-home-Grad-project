@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +6,6 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/web.dart';
 import 'package:smart_home_app/core/helpers/app_regex.dart';
-import 'package:smart_home_app/core/repo/auth_repo.dart';
 import 'package:smart_home_app/core/routing/routes.dart';
 import 'package:smart_home_app/core/theming/colors.dart';
 import 'package:smart_home_app/core/theming/text_style.dart';
@@ -36,10 +34,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocProvider(
-        create: (context) => LoginCubit(AuthRepo()),
-        child: Padding(
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
           child: SingleChildScrollView(
             child: Column(
@@ -53,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Gap(40.h),
                 Text(
-                  'welcome-back'.tr(),
+                  'Welcome Back',
                   style: TextStyles.font24BlueBold,
                 ),
                 Gap(20.h),
@@ -63,13 +60,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'email'.tr(),
+                        'E-mail',
                         style: TextStyles.font24BlueBold,
                       ),
                       Gap(8.h),
                       AppTextFormField(
                         controller: _emailController,
-                        hintText: 'enter-email'.tr(),
+                        hintText: 'Enter your e-mail',
                         suffixIcon: const Icon(
                           Icons.email_outlined,
                         ),
@@ -77,19 +74,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (value == null ||
                               value.isEmpty ||
                               !AppRegex.isEmailValid(value)) {
-                            return 'Please enter a valid email';
+                            return 'Please enter a valid e-mail';
                           }
                         },
                       ),
                       Gap(18.h),
                       Text(
-                        'password'.tr(),
+                        'Password',
                         style: TextStyles.font24BlueBold,
                       ),
                       Gap(8.h),
                       AppTextFormField(
                         controller: _passwordController,
-                        hintText: 'enter-password'.tr(),
+                        hintText: 'Enter your password',
                         isObscureText: isObscureText,
                         suffixIcon: GestureDetector(
                           onTap: () {
@@ -127,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ).show();
                           },
                           child: Text(
-                            'forgot-password'.tr(),
+                            'Forgot Password',
                             style: TextStyles.font12BlueRegular,
                           ),
                         ),
@@ -150,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             );
                           }
                           return AppTextButton(
-                            buttonText: "sign-in".tr(),
+                            buttonText: "Sign In",
                             textStyle: TextStyles.font16WhiteSemiBold,
                             onPressed: () async {
                               if (formKey.currentState!.validate()) {

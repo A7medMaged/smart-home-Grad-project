@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_home_app/core/theming/text_style.dart';
 
@@ -12,7 +11,7 @@ class TermsAndConditionsText extends StatelessWidget {
       text: TextSpan(
         children: [
           TextSpan(
-            text: 'by-logging,'.tr(),
+            text: 'By logging,',
             style: TextStyles.font13LightGrayRegular,
           ),
           TextSpan(
@@ -20,7 +19,7 @@ class TermsAndConditionsText extends StatelessWidget {
             style: TextStyles.font13LightGrayRegular,
           ),
           TextSpan(
-            text: 'you-agree-to-our'.tr(),
+            text: 'you agree to our',
             style: TextStyles.font13LightGrayRegular,
           ),
           TextSpan(
@@ -28,7 +27,7 @@ class TermsAndConditionsText extends StatelessWidget {
             style: TextStyles.font13LightGrayRegular,
           ),
           TextSpan(
-            text: ' terms-and-conditions'.tr(),
+            text: ' terms and conditions',
             style: TextStyles.font13GrayRegular,
           ),
           TextSpan(
@@ -36,7 +35,7 @@ class TermsAndConditionsText extends StatelessWidget {
             style: TextStyles.font13LightGrayRegular,
           ),
           TextSpan(
-            text: ' and'.tr(),
+            text: ' and',
             style: TextStyles.font13LightGrayRegular.copyWith(height: 1.6),
           ),
           TextSpan(
@@ -44,7 +43,7 @@ class TermsAndConditionsText extends StatelessWidget {
             style: TextStyles.font13LightGrayRegular,
           ),
           TextSpan(
-            text: ' privacy-policy'.tr(),
+            text: ' privacy policy',
             style: TextStyles.font13GrayRegular,
           ),
         ],

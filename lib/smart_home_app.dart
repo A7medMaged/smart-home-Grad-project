@@ -1,5 +1,4 @@
 // import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_home_app/core/routing/router.dart';
@@ -25,9 +24,6 @@ class _SmartHomeAppState extends State<SmartHomeApp> {
       minTextAdapt: true,
       designSize: const Size(375, 812),
       child: MaterialApp.router(
-        localizationsDelegates: context.localizationDelegates,
-        supportedLocales: context.supportedLocales,
-        locale: context.locale,
         title: 'Smart Home App',
         routerConfig: AppRouter.router,
         theme: ThemeData(

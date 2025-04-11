@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_home_app/core/test/cubit/led_cubit.dart';
+import 'package:smart_home_app/core/theming/colors.dart';
 
 class DeviceControl extends StatelessWidget {
   final bool isOn;
@@ -40,39 +43,29 @@ class DeviceControl extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
-              color: Colors.black,
+              color: isOn ? Colors.black : Colors.grey[600],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 20,
-            children: [
-              Text(
-                isOn ? 'On' : 'Off',
-                style: TextStyle(
-                  color: isOn ? Colors.green : Colors.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+          ElevatedButton(
+            onPressed: () => context.read<LedCubit>().toggleLed(),
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all<Color>(
+                isOn ? Colors.green : Colors.red,
+              ),
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              Switch.adaptive(
-                trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
-                activeTrackColor: Colors.green,
-                inactiveTrackColor: Colors.red,
-                inactiveThumbColor: Colors.white,
-                activeColor: Colors.white,
-                thumbIcon: WidgetStateProperty.resolveWith<Icon?>(
-                  (Set<WidgetState> states) {
-                    if (states.contains(WidgetState.selected)) {
-                      return Icon(iconOn, color: Colors.black);
-                    }
-                    return Icon(iconOff, color: Colors.grey);
-                  },
-                ),
-                value: isOn,
-                onChanged: onChanged,
+            ),
+            child: Text(
+              isOn ? 'On' : 'Off',
+              style: TextStyle(
+                color: white,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
               ),
-            ],
+            ),
           ),
         ],
       ),

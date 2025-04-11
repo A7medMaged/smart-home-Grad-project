@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +14,7 @@ class BackToLoginScreen extends StatelessWidget {
       text: TextSpan(
         children: [
           TextSpan(
-            text: 'already-have-account'.tr(),
+            text: 'Already have an account',
             style: TextStyles.font13LightGrayRegular,
           ),
           TextSpan(
@@ -23,7 +22,7 @@ class BackToLoginScreen extends StatelessWidget {
             style: TextStyles.font13LightGrayRegular,
           ),
           TextSpan(
-            text: 'sign-in'.tr(),
+            text: 'Sign in',
             style: TextStyles.font13BlueSemiBold,
             recognizer: TapGestureRecognizer()
               ..onTap = () {
