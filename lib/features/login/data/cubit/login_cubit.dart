@@ -8,7 +8,6 @@ class LoginCubit extends Cubit<LoginState> {
   final AuthRepo _authRepo = AuthRepo();
   LoginCubit(authRepo) : super(LoginInitial());
 
-  
   Future<void> login(String email, String password) async {
     emit(LoginLoading());
     try {
@@ -16,6 +15,16 @@ class LoginCubit extends Cubit<LoginState> {
       emit(LoginSuccess());
     } catch (e) {
       emit(LoginFailure(e.toString()));
+    }
+  }
+
+  Future<void> logout() async {
+    emit(AuthLoading());
+    try {
+      await _authRepo.logout();
+      emit(Unauthenticated());
+    } catch (e) {
+      emit(AuthError(e.toString()));
     }
   }
 }

@@ -9,3 +9,4 @@ const darkBlue = Color.fromARGB(255, 7, 0, 67);
 const lightGray = Color(0xFFC2C2C2);
 const moreLightGray = Color(0xFFFDFDFF);
 const moreLighterGray = Color(0xFFF5F5F5);
+const red = Color(0xffff0000);

@@ -14,3 +14,13 @@ final class LoginFailure extends LoginState {
 
   LoginFailure(this.error);
 }
+
+class AuthLoading extends LoginState {}
+
+class Unauthenticated extends LoginState {}
+
+class AuthError extends LoginState {
+  final String error;
+
+  AuthError(this.error);
+}

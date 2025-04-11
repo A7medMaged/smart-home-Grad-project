@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:smart_home_app/core/repo/auth_repo.dart';
 import 'package:smart_home_app/core/routing/routes.dart';
 import 'package:smart_home_app/core/test/led_ui.dart';
-import 'package:smart_home_app/features/home_page/ui/bedroom.dart';
 import 'package:smart_home_app/features/home_page/ui/devices.dart';
 import 'package:smart_home_app/features/home_page/ui/home_page.dart';
 import 'package:smart_home_app/features/home_page/widget/user_profile.dart';
@@ -38,10 +37,6 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.homePageScreen,
         builder: (context, state) => const HomePageScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.bedroom,
-        builder: (context, state) => const Bedroom(),
       ),
       GoRoute(
         path: AppRoutes.devicesPage,

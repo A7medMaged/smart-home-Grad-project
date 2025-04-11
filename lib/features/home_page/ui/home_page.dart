@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/web.dart';
 import 'package:smart_home_app/core/routing/routes.dart';
@@ -20,29 +18,6 @@ class HomePageScreen extends StatefulWidget {
 }
 
 class _HomePageScreenState extends State<HomePageScreen> {
-  String? _userName;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchUserData();
-  }
-
-  Future<void> _fetchUserData() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        setState(() {
-          _userName = documentSnapshot.get('name');
-        });
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // ignore: unused_local_variable
@@ -51,29 +26,20 @@ class _HomePageScreenState extends State<HomePageScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            Row(
-              children: [
-                Text(
-                  "Welcome",
-                  style: TextStyles.font18WhiteMedium,
-                ),
-                Text(
-                  ", $_userName",
-                  style: TextStyles.font18WhiteMedium,
-                ),
-              ],
-            ),
-            Gap(5.w),
-            const Icon(
-              Icons.verified,
-              color: mainBlue,
+            Text(
+              "Welcome Back",
+              style: TextStyles.font21WhiteMedium,
             ),
           ],
         ),
         systemOverlayStyle: SystemUiOverlayStyle.light,
         actions: [
           IconButton(
-            icon: const Icon(Icons.person_outline),
+            icon: SvgPicture.asset(
+              "assets/svgs/user-round.svg",
+              colorFilter: const ColorFilter.mode(white, BlendMode.srcIn),
+              width: 24,
+            ),
             onPressed: () {
               GoRouter.of(context).push(AppRoutes.userProfile);
             },
@@ -101,36 +67,3 @@ class _HomePageScreenState extends State<HomePageScreen> {
     );
   }
 }
-
-
-
-// GridView(
-//           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//             crossAxisCount: 2,
-//             crossAxisSpacing: 15,
-//             mainAxisSpacing: 15,
-//           ),
-//           physics: const BouncingScrollPhysics(),
-//           children: [
-//             CustomContainer(
-//               onTap: () => GoRouter.of(context).push(AppRoutes.devicesPage),
-//               icon: Icons.bathtub_outlined,
-//               title: "bathroom".tr(),
-//             ),
-//             CustomContainer(
-//               onTap: () => GoRouter.of(context).push(AppRoutes.devicesPage),
-//               icon: Icons.kitchen_outlined,
-//               title: "kitchen".tr(),
-//             ),
-//             CustomContainer(
-//               onTap: () => GoRouter.of(context).push(AppRoutes.devicesPage),
-//               icon: Icons.living_outlined,
-//               title: "living-room".tr(),
-//             ),
-//             CustomContainer(
-//               onTap: () => GoRouter.of(context).push(AppRoutes.devicesPage),
-//               icon: Icons.bed_outlined,
-//               title: "bedroom".tr(),
-//             ),
-//           ],
-//         ),

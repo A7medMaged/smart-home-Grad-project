@@ -46,7 +46,11 @@ class AuthRepo {
   }
 
   Future<void> logout() async {
-    await _auth.signOut();
+    try {
+      await _auth.signOut();
+    } catch (e) {
+      throw Exception('Logout failed: ${e.toString()}');
+    }
   }
 
   Future<void> forgotPassword(String email) async {
